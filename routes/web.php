@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Setup\ProgrammeOfStudyController;
+use App\Http\Controllers\Setup\SpecializationController;
+use App\Http\Controllers\Setup\UserController;
 use App\Http\Controllers\GeneralController;
 use Illuminate\Support\Facades\Route;
 
@@ -13,8 +15,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('setup')->name('setup.')->group(function () {
         Route::resource('programme-of-study', ProgrammeOfStudyController::class)
             ->names('programme-of-study');
+        Route::resource('specialization', SpecializationController::class)
+            ->names('specialization');
 
-       
+        Route::middleware('role:admin')->group(function () {
+            Route::resource('users', UserController::class)->names('users');
+        });
     });
 
         // General AJAX routes

@@ -50,12 +50,22 @@
             >
                 Programmes of Study
             </flux:sidebar.item>
-            <flux:sidebar.item icon="building-library" href="#" :current="false">
-                Departments
+            <flux:sidebar.item icon="building-library" href="{{ route('setup.specialization.index') }}" :current="request()->routeIs('setup.specialization.*')">
+                Specialization
             </flux:sidebar.item>
             <flux:sidebar.item icon="rectangle-stack" href="#" :current="false">
                 Sessions &amp; Semesters
             </flux:sidebar.item>
+            @if (auth()->user()->role?->name === 'admin')
+                <flux:sidebar.item
+                    icon="users"
+                    :href="route('setup.users.index')"
+                    :current="request()->routeIs('setup.users.*')"
+                    wire:navigate
+                >
+                    Users
+                </flux:sidebar.item>
+            @endif
         </flux:sidebar.group>
 
         {{-- Admissions --}}
