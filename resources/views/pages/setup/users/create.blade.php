@@ -95,31 +95,6 @@
                             <flux:error name="email" />
                         </flux:field>
                     </div>
-
-                    {{-- Password --}}
-                    <flux:field>
-                        <flux:label for="password">Password <span class="text-red-500">*</span></flux:label>
-                        <flux:input
-                            id="password"
-                            name="password"
-                            type="password"
-                            placeholder="Min. 8 characters"
-                            :invalid="$errors->has('password')"
-                        />
-                        <flux:error name="password" />
-                    </flux:field>
-
-                    {{-- Confirm Password --}}
-                    <flux:field>
-                        <flux:label for="password_confirmation">Confirm Password <span class="text-red-500">*</span></flux:label>
-                        <flux:input
-                            id="password_confirmation"
-                            name="password_confirmation"
-                            type="password"
-                            placeholder="Repeat password"
-                        />
-                    </flux:field>
-
                 </div>
             </div>
         </div>

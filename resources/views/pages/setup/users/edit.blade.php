@@ -101,41 +101,8 @@
             </div>
         </div>
 
-        {{-- Password Change (optional) --}}
-        <div class="overflow-hidden rounded-xl border border-amber-100 dark:border-amber-900/50 bg-white dark:bg-zinc-900 shadow-sm">
-            <div class="border-b border-amber-100 dark:border-amber-900/50 bg-amber-50/60 dark:bg-amber-900/20 px-6 py-4">
-                <h2 class="text-sm font-semibold text-amber-700 dark:text-amber-300 uppercase tracking-wider">Change Password</h2>
-                <p class="mt-1 text-xs text-amber-600/70 dark:text-amber-400/70">Leave blank to keep the current password.</p>
-            </div>
+     
 
-            <div class="p-6">
-                <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
-
-                    <flux:field>
-                        <flux:label for="password">New Password</flux:label>
-                        <flux:input
-                            id="password"
-                            name="password"
-                            type="password"
-                            placeholder="Min. 8 characters"
-                            :invalid="$errors->has('password')"
-                        />
-                        <flux:error name="password" />
-                    </flux:field>
-
-                    <flux:field>
-                        <flux:label for="password_confirmation">Confirm New Password</flux:label>
-                        <flux:input
-                            id="password_confirmation"
-                            name="password_confirmation"
-                            type="password"
-                            placeholder="Repeat new password"
-                        />
-                    </flux:field>
-
-                </div>
-            </div>
-        </div>
 
         {{-- Actions --}}
         <div class="flex items-center gap-3">

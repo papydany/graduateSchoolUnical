@@ -7,6 +7,7 @@ use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
@@ -41,20 +42,24 @@ class UserController extends Controller
         $request->validate([
             'name'                  => ['required', 'string', 'max:255'],
             'email'                 => ['required', 'email', 'max:255', 'unique:users,email'],
-            'password'              => ['required', 'string', 'min:8', 'confirmed'],
             'title'                 => ['nullable', 'string', 'max:50'],
             'role_id'               => ['required', 'exists:roles,id'],
         ]);
 
         try {
+            
             User::create([
                 'name'     => $request->name,
+                'uuid'     => Str::uuid()->toString(),
                 'email'    => $request->email,
-                'password' => $request->password,
+                'password' => "@123456789@",
                 'title'    => $request->title,
                 'role_id'  => $request->role_id,
+                'active'   => 1,
+                'user_id'  => auth()->id(),
             ]);
-        } catch (\Throwable) {
+        } catch (\Throwable $th) {
+            dd($th);
             return back()->withInput()
                 ->with('error', 'Could not create user. Please try again.');
         }
@@ -96,10 +101,7 @@ class UserController extends Controller
                 'role_id' => $request->role_id,
             ];
 
-            if ($request->filled('password')) {
-                $data['password'] = $request->password;
-            }
-
+         
             $user->update($data);
         } catch (\Throwable) {
             return back()->withInput()

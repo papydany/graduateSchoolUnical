@@ -39,7 +39,7 @@
                 Dashboard
             </flux:sidebar.item>
         </flux:sidebar.group>
-
+@if (auth()->user()->role?->name === 'admin')
         {{-- Setup --}}
         <flux:sidebar.group expandable heading="Setup" class="space-y-0.5">
             <flux:sidebar.item
@@ -53,10 +53,9 @@
             <flux:sidebar.item icon="building-library" href="{{ route('setup.specialization.index') }}" :current="request()->routeIs('setup.specialization.*')">
                 Specialization
             </flux:sidebar.item>
-            <flux:sidebar.item icon="rectangle-stack" href="#" :current="false">
-                Sessions &amp; Semesters
-            </flux:sidebar.item>
-            @if (auth()->user()->role?->name === 'admin')
+         
+    
+          
                 <flux:sidebar.item
                     icon="users"
                     :href="route('setup.users.index')"
@@ -65,13 +64,37 @@
                 >
                     Users
                 </flux:sidebar.item>
-            @endif
+    
+        </flux:sidebar.group>
+       @endif
+
+
+        {{-- Courses --}}
+        <flux:sidebar.group expandable heading="Courses" class="space-y-0.5">
+           
+        <flux:sidebar.item
+                icon="book-open"
+                :href="route('courses.index')"
+                :current="request()->routeIs('courses.*')"
+                wire:navigate
+            >
+                All Courses
+            </flux:sidebar.item>
+
+                    <flux:sidebar.item
+                icon="book-open"
+                :href="route('registered-courses.index')"
+                :current="request()->routeIs('registered-courses.*')"
+                wire:navigate
+            >
+                Registered Courses
+            </flux:sidebar.item>
         </flux:sidebar.group>
 
         {{-- Admissions --}}
         <flux:sidebar.group expandable heading="Admissions" class="space-y-0.5">
             <flux:sidebar.item icon="document-text" href="#" :current="false">
-                Applications
+                
             </flux:sidebar.item>
             <flux:sidebar.item icon="check-badge" href="#" :current="false">
                 Offer Letters

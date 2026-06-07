@@ -4,6 +4,8 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Setup\ProgrammeOfStudyController;
 use App\Http\Controllers\Setup\SpecializationController;
 use App\Http\Controllers\Setup\UserController;
+use App\Http\Controllers\Course\CourseController;
+use App\Http\Controllers\Course\RegisteredCourseController;
 use App\Http\Controllers\GeneralController;
 use Illuminate\Support\Facades\Route;
 
@@ -13,15 +15,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Setup
     Route::prefix('setup')->name('setup.')->group(function () {
+       //  Route::middleware('role:admin')->group(function () {
         Route::resource('programme-of-study', ProgrammeOfStudyController::class)
             ->names('programme-of-study');
         Route::resource('specialization', SpecializationController::class)
             ->names('specialization');
-
-        Route::middleware('role:admin')->group(function () {
             Route::resource('users', UserController::class)->names('users');
-        });
+       // });
     });
+
+    // Courses
+    Route::resource('courses', CourseController::class)->names('courses');
+    Route::resource('registered-courses', RegisteredCourseController::class)->names('registered-courses');
 
         // General AJAX routes
     Route::prefix('general')->name('general.')->group(function () {
