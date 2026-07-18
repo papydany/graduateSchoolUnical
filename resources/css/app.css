@@ -64,3 +64,26 @@ select:focus[data-flux-control] {
 /* \[:where(&)\]:size-4 {
     @apply size-4;
 } */
+
+/* Navy sidebar theme: force nav text/icons to white regardless of Flux's default zinc tones */
+[data-flux-sidebar] .text-zinc-400,
+[data-flux-sidebar] .text-zinc-500,
+[data-flux-sidebar] [data-flux-sidebar-item] {
+    color: #fff !important;
+}
+
+/* Active nav item: Flux defaults to a white pill, which washes out on the navy sidebar */
+[data-flux-sidebar] [data-flux-sidebar-item][data-current] {
+    background-color: rgba(255, 255, 255, 0.12) !important;
+    border-color: transparent !important;
+}
+
+/* Hide scrollbar while keeping the element scrollable */
+.no-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}

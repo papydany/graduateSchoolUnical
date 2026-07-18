@@ -9,24 +9,26 @@
      SIDEBAR
 ══════════════════════════════════════ --}}
 <flux:sidebar sticky collapsible="mobile"
-    class="border-e border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900 w-64">
+    class="border-e border-blue-900 bg-blue-950 dark:border-blue-900 dark:bg-blue-950 w-64">
 
     {{-- Brand --}}
-    <flux:sidebar.header class="border-b border-zinc-100 dark:border-zinc-800 pb-3">
+    <flux:sidebar.header class="border-b border-blue-900 pb-3">
         <a href="{{ route('dashboard') }}" wire:navigate class="flex items-center gap-2.5 px-1">
-            <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-zinc-900 dark:bg-white/10 ring-1 ring-zinc-800/10 dark:ring-white/10">
+            <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-900 ring-1 ring-white/10">
                 <x-app-logo-icon class="size-4 fill-current text-white" />
             </div>
             <div class="grid leading-tight">
-                <span class="truncate text-sm font-semibold text-zinc-900 dark:text-white">Graduate School</span>
-                <span class="truncate text-[10px] text-zinc-400 dark:text-zinc-500">Portal {{ date('Y') }}</span>
+                <span class="truncate text-sm font-semibold text-white">Graduate School</span>
+                <span class="truncate text-[10px] text-white/70">Portal {{ date('Y') }}</span>
             </div>
         </a>
-        <flux:sidebar.collapse class="ms-auto lg:hidden text-zinc-400" />
+
+
+        <flux:sidebar.collapse class="ms-auto lg:hidden text-white" />
     </flux:sidebar.header>
 
     {{-- Navigation --}}
-    <flux:sidebar.nav class="flex-1 overflow-y-auto py-4 px-2 space-y-4">
+    <flux:sidebar.nav class="flex-1 overflow-y-auto no-scrollbar py-4 px-2 space-y-4">
 
         {{-- Platform --}}
         <flux:sidebar.group heading="Platform" class="space-y-0.5">
@@ -129,10 +131,10 @@
 
     </flux:sidebar.nav>
 
-    <flux:spacer />
+  
 
     {{-- Desktop user menu --}}
-    <div class="border-t border-zinc-100 dark:border-zinc-800 p-2 hidden lg:block">
+    <div class="border-t border-blue-900 p-2 hidden lg:block">
         <x-desktop-user-menu :name="auth()->user()->name" />
     </div>
 
@@ -141,10 +143,10 @@
 {{-- ══════════════════════════════════════
      MOBILE TOP BAR
 ══════════════════════════════════════ --}}
-<flux:header class="lg:hidden sticky top-0 z-40 border-b border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
-    <flux:sidebar.toggle icon="bars-2" inset="left" class="text-zinc-500" />
+<flux:header class="lg:hidden sticky top-0 z-40 border-b border-blue-900 bg-blue-950 dark:border-blue-900 dark:bg-blue-950">
+    <flux:sidebar.toggle icon="bars-2" inset="left" class="text-white" />
 
-    <span class="ms-2 text-sm font-semibold text-zinc-800 dark:text-white">Graduate School Portal</span>
+    <span class="ms-2 text-sm font-semibold text-white">Graduate School Portal</span>
 
     <flux:spacer />
 
