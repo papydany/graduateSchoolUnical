@@ -87,6 +87,35 @@
                 </span>
             </div>
 
+            {{-- Staff Type --}}
+            <div class="flex items-center gap-4 px-6 py-4">
+                <span class="w-32 shrink-0 text-xs font-semibold uppercase tracking-wider text-indigo-400 dark:text-indigo-500">Staff Type</span>
+                @if (($user->role?->academic_staff ?? null) === null)
+                    <span class="text-sm text-zinc-400">—</span>
+                @elseif ((int) $user->role->academic_staff === 1)
+                    <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold bg-teal-100 text-teal-700 dark:bg-teal-900/40 dark:text-teal-300">
+                        Academic Staff
+                    </span>
+                @else
+                    <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold bg-zinc-100 text-zinc-600 dark:bg-zinc-700 dark:text-zinc-300">
+                        Non-academic Staff
+                    </span>
+                @endif
+            </div>
+
+            {{-- Faculty & Department (academic staff only) --}}
+            @if ((int) ($user->role?->academic_staff ?? 0) === 1)
+                <div class="flex items-center gap-4 px-6 py-4">
+                    <span class="w-32 shrink-0 text-xs font-semibold uppercase tracking-wider text-indigo-400 dark:text-indigo-500">Faculty</span>
+                    <span class="text-sm text-zinc-700 dark:text-zinc-200">{{ $user->faculty?->faculty_name ?? '—' }}</span>
+                </div>
+
+                <div class="flex items-center gap-4 px-6 py-4">
+                    <span class="w-32 shrink-0 text-xs font-semibold uppercase tracking-wider text-indigo-400 dark:text-indigo-500">Department</span>
+                    <span class="text-sm text-zinc-700 dark:text-zinc-200">{{ $user->department?->department_name ?? '—' }}</span>
+                </div>
+            @endif
+
             {{-- Email Verified --}}
             <div class="flex items-center gap-4 px-6 py-4">
                 <span class="w-32 shrink-0 text-xs font-semibold uppercase tracking-wider text-indigo-400 dark:text-indigo-500">Email Verified</span>

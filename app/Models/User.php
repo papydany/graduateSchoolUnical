@@ -17,7 +17,7 @@ use App\Models\Role;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
-#[Fillable(['name', 'email', 'password','uuid','role_id','title','active','user_id'])]
+#[Fillable(['name', 'email', 'password', 'uuid', 'role_id', 'title', 'active', 'user_id', 'faculty_id', 'department_id'])]
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
 class User extends Authenticatable implements PasskeyUser
 {
@@ -59,6 +59,16 @@ class User extends Authenticatable implements PasskeyUser
     public function departmentAssignments()
 {
     return $this->hasMany(DepartmentAssigned::class);
+}
+
+    public function faculty()
+{
+    return $this->belongsTo(Faculty::class);
+}
+
+    public function department()
+{
+    return $this->belongsTo(Department::class);
 }
 
 public function hasPermission($permissionName)

@@ -1,5 +1,13 @@
 <x-layouts::app :title="__('Create User')">
-<div class="flex h-full w-full flex-1 flex-col gap-6 p-6 max-w-2xl">
+<div class="flex h-full w-full flex-1 flex-col gap-6 p-6 max-w-2xl"
+     x-data="userForm(
+        {{ Illuminate\Support\Js::from($roles) }},
+        '{{ route('general.departments.by-faculty', ['facultyId' => '__ID__']) }}',
+        '{{ old('academic_staff', '') }}',
+        '{{ old('role_id', '') }}',
+        '{{ old('faculty_id', '') }}',
+        '{{ old('department_id', '') }}'
+     )">
 
     {{-- Page Header --}}
     <div class="rounded-xl bg-gradient-to-r from-indigo-600 to-blue-500 px-6 py-5 shadow-sm">
@@ -51,19 +59,98 @@
                         <flux:error name="title" />
                     </flux:field>
 
-                    {{-- Role --}}
+                    {{-- Staff Type --}}
                     <flux:field>
-                        <flux:label for="role_id">Role <span class="text-red-500">*</span></flux:label>
-                        <flux:select id="role_id" name="role_id" :invalid="$errors->has('role_id')">
-                            <option value="">— Select role —</option>
-                            @foreach ($roles as $role)
-                                <option value="{{ $role->id }}" @selected(old('role_id') == $role->id)>
-                                    {{ ucfirst($role->name) }}
-                                </option>
-                            @endforeach
+                        <flux:label for="academic_staff">Staff Type <span class="text-red-500">*</span></flux:label>
+                        <flux:select
+                            id="academic_staff"
+                            name="academic_staff"
+                            :invalid="$errors->has('academic_staff')"
+                            x-model="academicStaff"
+                            x-on:change="onStaffTypeChange()"
+                        >
+                            <option value="">— Select staff type —</option>
+                            <option value="1">Academic Staff</option>
+                            <option value="0">Non-academic Staff</option>
                         </flux:select>
-                        <flux:error name="role_id" />
+                        <flux:error name="academic_staff" />
                     </flux:field>
+
+                    {{-- Role --}}
+                    <div class="sm:col-span-2">
+                        <flux:field>
+                            <flux:label for="role_id">Role <span class="text-red-500">*</span></flux:label>
+                            <flux:select
+                                id="role_id"
+                                name="role_id"
+                                :invalid="$errors->has('role_id')"
+                                x-model="roleId"
+                                x-bind:disabled="academicStaff === ''"
+                            >
+                                <option value="">
+                                    <span x-text="academicStaff === '' ? '— Select a staff type first —' : '— Select role —'"></span>
+                                </option>
+                                <template x-for="role in filteredRoles" :key="role.id">
+                                    <option :value="role.id" x-text="role.name"></option>
+                                </template>
+                            </flux:select>
+                            <flux:error name="role_id" />
+                        </flux:field>
+                    </div>
+
+                    {{-- Faculty / Department (academic staff only) --}}
+                    <template x-if="academicStaff === '1'">
+                        <flux:field>
+                            <flux:label for="faculty_id">Faculty <span class="text-red-500">*</span></flux:label>
+                            <flux:select
+                                id="faculty_id"
+                                name="faculty_id"
+                                :invalid="$errors->has('faculty_id')"
+                                x-model="facultyId"
+                                x-on:change="loadDepartments($event.target.value)"
+                            >
+                                <option value="">— Select faculty —</option>
+                                @foreach ($faculties as $fac)
+                                    <option value="{{ $fac->id }}">{{ $fac->faculty_name }}</option>
+                                @endforeach
+                            </flux:select>
+                            <flux:error name="faculty_id" />
+                        </flux:field>
+                    </template>
+
+                    <template x-if="academicStaff === '1'">
+                        <div class="sm:col-span-2">
+                            <flux:field>
+                                <flux:label for="department_id">Department <span class="text-red-500">*</span></flux:label>
+
+                                <div x-show="loadingDepartments" class="flex items-center gap-2 text-sm text-indigo-400 py-2">
+                                    <svg class="size-4 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                                    </svg>
+                                    Loading departments…
+                                </div>
+
+                                <flux:select
+                                    id="department_id"
+                                    name="department_id"
+                                    :invalid="$errors->has('department_id')"
+                                    x-show="!loadingDepartments"
+                                    x-model="departmentId"
+                                    x-bind:disabled="departments.length === 0"
+                                >
+                                    <option value="">
+                                        <span x-text="departments.length === 0 ? '— Select a faculty first —' : '— Select department —'"></span>
+                                    </option>
+                                    <template x-for="dept in departments" :key="dept.id">
+                                        <option :value="dept.id" x-text="dept.department_name"></option>
+                                    </template>
+                                </flux:select>
+
+                                <flux:error name="department_id" />
+                            </flux:field>
+                        </div>
+                    </template>
 
                     {{-- Full Name --}}
                     <div class="sm:col-span-2">
@@ -116,4 +203,61 @@
     </form>
 
 </div>
+
+<script>
+function userForm(roles, departmentUrlTemplate, initialAcademicStaff, initialRoleId, initialFacultyId, initialDepartmentId) {
+    return {
+        roles: roles,
+        academicStaff: initialAcademicStaff,
+        roleId: initialRoleId,
+        facultyId: initialFacultyId,
+        departmentId: initialDepartmentId,
+        departments: [],
+        loadingDepartments: false,
+
+        get filteredRoles() {
+            if (this.academicStaff === '') return [];
+            return this.roles.filter(role => String(role.academic_staff) === String(this.academicStaff));
+        },
+
+        init() {
+            if (this.academicStaff === '1' && this.facultyId) {
+                this.loadDepartments(this.facultyId);
+            }
+        },
+
+        onStaffTypeChange() {
+            this.roleId = '';
+
+            if (this.academicStaff !== '1') {
+                this.facultyId = '';
+                this.departmentId = '';
+                this.departments = [];
+            }
+        },
+
+        loadDepartments(facultyId) {
+            this.departments = [];
+            this.departmentId = '';
+            if (!facultyId) return;
+
+            this.loadingDepartments = true;
+            const url = departmentUrlTemplate.replace('__ID__', facultyId);
+
+            fetch(url, {
+                headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            .then(r => { if (!r.ok) throw new Error(); return r.json(); })
+            .then(data => {
+                this.departments = data;
+                if (initialDepartmentId && data.some(d => String(d.id) === String(initialDepartmentId))) {
+                    this.departmentId = initialDepartmentId;
+                }
+            })
+            .catch(() => { this.departments = []; })
+            .finally(() => { this.loadingDepartments = false; });
+        }
+    }
+}
+</script>
 </x-layouts::app>

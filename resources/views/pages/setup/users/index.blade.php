@@ -51,8 +51,21 @@
                     </option>
                 @endforeach
             </flux:select>
+            <flux:select name="academic_staff" class="w-44">
+                <option value="">All Staff Types</option>
+                <option value="1" @selected(request('academic_staff') === '1')>Academic Staff</option>
+                <option value="0" @selected(request('academic_staff') === '0')>Non-academic Staff</option>
+            </flux:select>
+            <flux:select name="department_id" class="w-48">
+                <option value="">All Departments</option>
+                @foreach ($departments as $department)
+                    <option value="{{ $department->id }}" @selected(request('department_id') == $department->id)>
+                        {{ $department->department_name }}
+                    </option>
+                @endforeach
+            </flux:select>
             <flux:button type="submit" variant="filled">Filter</flux:button>
-            @if (request()->hasAny(['search', 'role_id']))
+            @if (request()->hasAny(['search', 'role_id', 'academic_staff', 'department_id']))
                 <flux:button href="{{ route('setup.users.index') }}" wire:navigate>Clear</flux:button>
             @endif
         </form>
@@ -67,7 +80,7 @@
                         <th class="px-4 py-3">Email</th>
                         <th class="px-4 py-3">Title</th>
                         <th class="px-4 py-3">Role</th>
-                        <th class="px-4 py-3">Created</th>
+                        <th class="px-4 py-3">Department</th>
                         <th class="px-4 py-3 text-right">Actions</th>
                     </tr>
                 </thead>
@@ -77,9 +90,7 @@
                             <td class="px-4 py-3 text-zinc-400 text-xs">{{ $users->firstItem() + $loop->index }}</td>
                             <td class="px-4 py-3">
                                 <div class="flex items-center gap-3">
-                                    <div class="flex size-8 shrink-0 items-center justify-center rounded-full bg-indigo-100 dark:bg-indigo-900/50 text-xs font-bold text-indigo-600 dark:text-indigo-300">
-                                        {{ $user->initials() }}
-                                    </div>
+                                 
                                     <span class="font-semibold text-zinc-800 dark:text-zinc-100">{{ $user->name }}</span>
                                 </div>
                             </td>
@@ -99,8 +110,12 @@
                                     {{ ucfirst($roleName) }}
                                 </span>
                             </td>
-                            <td class="px-4 py-3 text-zinc-400 text-xs">
-                                {{ $user->created_at?->format('d M Y') ?? '—' }}
+                            <td class="px-4 py-3 text-zinc-500 dark:text-zinc-400 text-xs">
+                                @if (($user->role?->academic_staff ?? 0) == 1)
+                                    {{ $user->department?->department_name ?? '—' }}
+                                @else
+                                    <span class="text-zinc-300 dark:text-zinc-600">—</span>
+                                @endif
                             </td>
                             <td class="px-4 py-3 text-right">
                                 <div class="flex items-center justify-end gap-1">
