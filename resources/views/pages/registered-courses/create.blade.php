@@ -135,12 +135,29 @@
                     </flux:field>
 
                     <flux:field>
-                        <flux:label for="status">Status <span class="text-red-500">*</span></flux:label>
-                        <flux:select id="status" name="status" :invalid="$errors->has('status')">
-                            <option value="active" @selected(old('status', 'active') === 'active')>Active</option>
-                            <option value="inactive" @selected(old('status') === 'inactive')>Inactive</option>
+                        <flux:label for="specialization_id">Specialization <span class="text-red-500">*</span></flux:label>
+                        <flux:select id="specialization_id" name="specialization_id" :invalid="$errors->has('specialization_id')">
+                            <option value="">— Select specialization —</option>
+                            @foreach ($specializations as $spec)
+                                <option value="{{ $spec->id }}" @selected(old('specialization_id') == $spec->id)>
+                                    {{ $spec->name }}
+                                </option>
+                            @endforeach
                         </flux:select>
-                        <flux:error name="status" />
+                        <flux:error name="specialization_id" />
+                    </flux:field>
+
+                    <flux:field>
+                        <flux:label for="programme_type_id">Programme Type <span class="text-red-500">*</span></flux:label>
+                        <flux:select id="programme_type_id" name="programme_type_id" :invalid="$errors->has('programme_type_id')">
+                            <option value="">— Select programme type —</option>
+                            @foreach ($programmeTypes as $type)
+                                <option value="{{ $type->id }}" @selected(old('programme_type_id') == $type->id)>
+                                    {{ $type->name }}
+                                </option>
+                            @endforeach
+                        </flux:select>
+                        <flux:error name="programme_type_id" />
                     </flux:field>
 
                 </div>

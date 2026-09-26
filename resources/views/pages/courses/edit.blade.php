@@ -53,6 +53,7 @@
                             placeholder="e.g. GSE501"
                             class="font-mono uppercase"
                             :invalid="$errors->has('code')"
+                            readonly
                         />
                         <flux:error name="code" />
                     </flux:field>
@@ -157,8 +158,8 @@
                         <flux:label for="semester">Semester <span class="text-red-500">*</span></flux:label>
                         <flux:select id="semester" name="semester" :invalid="$errors->has('semester')">
                             <option value="">— Select —</option>
-                            <option value="1st Semester" @selected(old('semester', $course->semester) === '1st Semester')>1st Semester</option>
-                            <option value="2nd Semester" @selected(old('semester', $course->semester) === '2nd Semester')>2nd Semester</option>
+                            <option value="1" @selected(old('semester', $course->semester) === 1)>1st Semester</option>
+                            <option value="2" @selected(old('semester', $course->semester) === 2)>2nd Semester</option>
                         </flux:select>
                         <flux:error name="semester" />
                     </flux:field>

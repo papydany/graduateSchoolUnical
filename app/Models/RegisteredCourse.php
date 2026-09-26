@@ -12,8 +12,8 @@ class RegisteredCourse extends Model
     use HasUuids, SoftDeletes;
 
     protected $fillable = [
-        'uuid', 'course_id', 'programme_of_study_id', 'level_id',
-        'code', 'title', 'unit', 'semester', 'session', 'status',
+        'uuid', 'course_id', 'programme_of_study_id','specialization_id','programme_type_id', 'level_id',
+        'code', 'title', 'unit', 'semester', 'session',
     ];
 
     public function getRouteKeyName(): string

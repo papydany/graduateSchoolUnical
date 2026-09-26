@@ -7,13 +7,22 @@
                 <h1 class="text-xl font-bold text-white">Courses</h1>
                 <p class="mt-1 text-sm text-indigo-100">Manage all courses offered in the graduate school.</p>
             </div>
-            <a href="{{ route('courses.create') }}"
-               class="inline-flex items-center gap-2 rounded-lg bg-white px-4 py-2 text-sm font-semibold text-indigo-600 shadow hover:bg-indigo-50 transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" class="size-4" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
-                </svg>
-                Add Courses
-            </a>
+            <div class="flex items-center gap-2">
+                <a href="{{ route('courses.import.form') }}"
+                   class="inline-flex items-center gap-2 rounded-lg bg-indigo-500 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-indigo-400 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4-4m0 0l-4 4m4-4v12" />
+                    </svg>
+                    Import
+                </a>
+                <a href="{{ route('courses.create') }}"
+                   class="inline-flex items-center gap-2 rounded-lg bg-white px-4 py-2 text-sm font-semibold text-indigo-600 shadow hover:bg-indigo-50 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="size-4" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                    </svg>
+                    Add Courses
+                </a>
+            </div>
         </div>
 
         {{-- Flash Messages --}}
@@ -31,6 +40,16 @@
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
                 </svg>
                 {{ session('error') }}
+            </div>
+        @endif
+        @if (session('import_errors') && count(session('import_errors')) > 0)
+            <div class="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700 dark:border-amber-800 dark:bg-amber-900/30 dark:text-amber-300">
+                <p class="font-semibold mb-1">{{ count(session('import_errors')) }} row(s) had issues:</p>
+                <ul class="list-disc list-inside space-y-0.5 max-h-40 overflow-y-auto">
+                    @foreach (session('import_errors') as $importError)
+                        <li>{{ $importError }}</li>
+                    @endforeach
+                </ul>
             </div>
         @endif
 

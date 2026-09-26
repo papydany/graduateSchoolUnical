@@ -74,7 +74,7 @@
                 >
                     Department Assigned
                 </flux:sidebar.item>
-    
+
         </flux:sidebar.group>
        @endif
 
@@ -94,10 +94,19 @@
                     <flux:sidebar.item
                 icon="book-open"
                 :href="route('registered-courses.index')"
-                :current="request()->routeIs('registered-courses.*')"
+                :current="request()->routeIs('registered-courses.index', 'registered-courses.getCourses')"
                 wire:navigate
             >
-                Registered Courses
+                Register Courses
+            </flux:sidebar.item>
+
+                    <flux:sidebar.item
+                icon="clipboard-document-list"
+                :href="route('registered-courses.list')"
+                :current="request()->routeIs('registered-courses.list', 'registered-courses.show', 'registered-courses.edit')"
+                wire:navigate
+            >
+                View Registered Courses
             </flux:sidebar.item>
         </flux:sidebar.group>
 

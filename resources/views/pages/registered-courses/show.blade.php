@@ -83,12 +83,28 @@
             </div>
             <dl class="divide-y divide-zinc-100 dark:divide-zinc-800">
                 <div class="grid grid-cols-3 px-6 py-4">
-                    <dt class="text-xs font-medium text-zinc-400 uppercase tracking-wider self-center">Programme of Study</dt>
-                    <dd class="col-span-2 text-sm text-zinc-700 dark:text-zinc-300">{{ $programmeOfStudy?->name ?? '—' }}</dd>
+                    <dt class="text-xs font-medium text-zinc-400 uppercase tracking-wider self-center">Programme</dt>
+                    <dd class="col-span-2 text-sm text-zinc-700 dark:text-zinc-300">{{ $programme->name ?? '—' }}</dd>
                 </div>
                 <div class="grid grid-cols-3 px-6 py-4">
-                    <dt class="text-xs font-medium text-zinc-400 uppercase tracking-wider self-center">Level</dt>
-                    <dd class="col-span-2 text-sm text-zinc-700 dark:text-zinc-300">{{ $levels[$registeredCourse->level_id] ?? 'Year '.$registeredCourse->level_id }}</dd>
+                    <dt class="text-xs font-medium text-zinc-400 uppercase tracking-wider self-center">Programme Type</dt>
+                    <dd class="col-span-2 text-sm text-zinc-700 dark:text-zinc-300">{{ $programmeType->name ?? '—' }}</dd>
+                </div>
+                <div class="grid grid-cols-3 px-6 py-4">
+                    <dt class="text-xs font-medium text-zinc-400 uppercase tracking-wider self-center">Faculty</dt>
+                    <dd class="col-span-2 text-sm text-zinc-700 dark:text-zinc-300">{{ $faculty->faculty_name ?? '—' }}</dd>
+                </div>
+                <div class="grid grid-cols-3 px-6 py-4">
+                    <dt class="text-xs font-medium text-zinc-400 uppercase tracking-wider self-center">Department</dt>
+                    <dd class="col-span-2 text-sm text-zinc-700 dark:text-zinc-300">{{ $department->department_name ?? '—' }}</dd>
+                </div>
+                <div class="grid grid-cols-3 px-6 py-4">
+                    <dt class="text-xs font-medium text-zinc-400 uppercase tracking-wider self-center">Programme of Study</dt>
+                    <dd class="col-span-2 text-sm text-zinc-700 dark:text-zinc-300">{{ $programmeOfStudy->name ?? '—' }}</dd>
+                </div>
+                <div class="grid grid-cols-3 px-6 py-4">
+                    <dt class="text-xs font-medium text-zinc-400 uppercase tracking-wider self-center">Specialization</dt>
+                    <dd class="col-span-2 text-sm text-zinc-700 dark:text-zinc-300">{{ $specialization->name ?? '—' }}</dd>
                 </div>
                 <div class="grid grid-cols-3 px-6 py-4">
                     <dt class="text-xs font-medium text-zinc-400 uppercase tracking-wider self-center">Session</dt>
@@ -97,17 +113,8 @@
                     </dd>
                 </div>
                 <div class="grid grid-cols-3 px-6 py-4">
-                    <dt class="text-xs font-medium text-zinc-400 uppercase tracking-wider self-center">Status</dt>
-                    <dd class="col-span-2">
-                        @php
-                            $statusClass = $registeredCourse->status === 'active'
-                                ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300'
-                                : 'bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400';
-                        @endphp
-                        <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium {{ $statusClass }}">
-                            {{ ucfirst($registeredCourse->status) }}
-                        </span>
-                    </dd>
+                    <dt class="text-xs font-medium text-zinc-400 uppercase tracking-wider self-center">Level</dt>
+                    <dd class="col-span-2 text-sm text-zinc-700 dark:text-zinc-300">{{ $levels[$registeredCourse->level_id] ?? 'Year '.$registeredCourse->level_id }}</dd>
                 </div>
                 <div class="grid grid-cols-3 px-6 py-4">
                     <dt class="text-xs font-medium text-zinc-400 uppercase tracking-wider self-center">Registered On</dt>
