@@ -56,6 +56,11 @@ class User extends Authenticatable implements PasskeyUser
     return $this->belongsTo(Role::class);
 }
 
+    public function departmentAssignments()
+{
+    return $this->hasMany(DepartmentAssigned::class);
+}
+
 public function hasPermission($permissionName)
 {
     return $this->role->permissions()->where('name', $permissionName)->exists();

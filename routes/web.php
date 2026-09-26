@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Setup\DepartmentAssignedController;
 use App\Http\Controllers\Setup\ProgrammeOfStudyController;
 use App\Http\Controllers\Setup\SpecializationController;
 use App\Http\Controllers\Setup\UserController;
@@ -21,6 +22,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('specialization', SpecializationController::class)
             ->names('specialization');
             Route::resource('users', UserController::class)->names('users');
+        Route::get('department-assigned', [DepartmentAssignedController::class, 'index'])
+            ->name('department-assigned.index');
+        Route::get('department-assigned/create', [DepartmentAssignedController::class, 'create'])
+            ->name('department-assigned.create');
+        Route::get('department-assigned/coordinators', [DepartmentAssignedController::class, 'coordinators'])
+            ->name('department-assigned.coordinators');
+        Route::post('department-assigned', [DepartmentAssignedController::class, 'store'])
+            ->name('department-assigned.store');
        // });
     });
 

@@ -66,6 +66,14 @@
                 >
                     Users
                 </flux:sidebar.item>
+                <flux:sidebar.item
+                    icon="building-office"
+                    :href="route('setup.department-assigned.index')"
+                    :current="request()->routeIs('setup.department-assigned.*')"
+                    wire:navigate
+                >
+                    Department Assigned
+                </flux:sidebar.item>
     
         </flux:sidebar.group>
        @endif
