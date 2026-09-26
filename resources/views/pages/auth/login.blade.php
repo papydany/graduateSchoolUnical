@@ -10,10 +10,10 @@
     {{-- ═══════════════════════════════════════════════
          LEFT PANEL — Institution Branding
     ════════════════════════════════════════════════ --}}
-    <div class="relative hidden lg:flex flex-col justify-between bg-zinc-900 p-12 overflow-hidden">
+    <div class="relative hidden lg:flex flex-col justify-between bg-blue-950 p-12 overflow-hidden">
 
         {{-- Background texture --}}
-        <div class="absolute inset-0 bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-950 opacity-90"></div>
+        <div class="absolute inset-0 bg-gradient-to-br from-blue-950 via-blue-900 to-blue-950 opacity-90"></div>
         <div class="absolute inset-0 opacity-5"
              style="background-image: radial-gradient(circle at 1px 1px, white 1px, transparent 0); background-size: 32px 32px;">
         </div>
@@ -66,7 +66,7 @@
 
         {{-- Mobile logo (hidden on large screens) --}}
         <a href="{{ route('home') }}" class="mb-8 flex items-center gap-2 lg:hidden" wire:navigate>
-            <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-zinc-900 dark:bg-white/10">
+            <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-900 dark:bg-blue-900/40">
                 <x-app-logo-icon class="size-5 fill-current text-white" />
             </div>
             <span class="text-base font-semibold text-zinc-800 dark:text-white">
@@ -156,44 +156,27 @@
                     <flux:error name="password" />
                 </flux:field>
 
-                {{-- Remember me --}}
-                <div class="flex items-center gap-2">
-                    <flux:checkbox id="remember" name="remember" />
-                    <flux:label for="remember" class="text-sm font-normal text-zinc-600 dark:text-zinc-400">
-                        Keep me signed in
-                    </flux:label>
-                </div>
+              
 
                 {{-- Submit --}}
                 <flux:button
                     type="submit"
                     variant="primary"
-                    class="w-full"
+                    class="w-full bg-blue-900! hover:bg-blue-950! text-white!"
                     data-test="login-button"
                 >
                     Sign In
                 </flux:button>
             </form>
 
-            {{-- Divider --}}
-            <div class="relative">
-                <div class="absolute inset-0 flex items-center">
-                    <div class="w-full border-t border-zinc-200 dark:border-zinc-700"></div>
-                </div>
-                <div class="relative flex justify-center">
-                    <span class="bg-white px-3 text-xs text-zinc-400 dark:bg-zinc-950">
-                        Need help? Contact ICT Support
-                    </span>
-                </div>
-            </div>
 
             {{-- Footer --}}
             <p class="text-center text-xs text-zinc-400 dark:text-zinc-500">
-                &copy; {{ date('Y') }} {{ config('app.name', 'Graduate School Portal') }}.
+                &copy; {{ date('Y') }} {{ config('app.name', '') }}.
                 All rights reserved.
             </p>
 
-        </div>
+        </div
     </div>
 
 </div>
