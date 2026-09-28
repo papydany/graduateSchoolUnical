@@ -1,14 +1,14 @@
 <x-layouts::app :title="__('Users')">
-    <div class="flex h-full w-full flex-1 flex-col gap-6 p-6">
+    <div class="flex h-full w-full flex-1 flex-col gap-4 p-4 sm:gap-6 sm:p-6">
 
         {{-- Page Header --}}
-        <div class="rounded-xl bg-gradient-to-r from-indigo-600 to-blue-500 px-6 py-5 flex items-center justify-between shadow-sm">
+        <div class="rounded-xl bg-gradient-to-r from-indigo-600 to-blue-500 px-4 py-4 sm:px-6 sm:py-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between shadow-sm">
             <div>
                 <h1 class="text-xl font-bold text-white">Users</h1>
                 <p class="mt-1 text-sm text-indigo-100">Manage portal user accounts and role assignments.</p>
             </div>
             <a href="{{ route('setup.users.create') }}"
-               class="inline-flex items-center gap-2 rounded-lg bg-white px-4 py-2 text-sm font-semibold text-indigo-600 shadow hover:bg-indigo-50 transition-colors">
+               class="inline-flex items-center justify-center gap-2 self-start sm:self-auto rounded-lg bg-white px-4 py-2 text-sm font-semibold text-indigo-600 shadow hover:bg-indigo-50 transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" class="size-4" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
                 </svg>
@@ -35,15 +35,15 @@
         @endif
 
         {{-- Filters --}}
-        <form method="GET" action="{{ route('setup.users.index') }}" class="flex flex-wrap gap-3">
+        <form method="GET" action="{{ route('setup.users.index') }}" class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:flex lg:flex-wrap">
             <flux:input
                 name="search"
                 value="{{ request('search') }}"
                 placeholder="Search by name or email…"
                 icon="magnifying-glass"
-                class="w-72"
+                class="w-full lg:w-72"
             />
-            <flux:select name="role_id" class="w-44">
+            <flux:select name="role_id" class="w-full lg:w-44">
                 <option value="">All Roles</option>
                 @foreach ($roles as $role)
                     <option value="{{ $role->id }}" @selected(request('role_id') == $role->id)>
@@ -51,12 +51,12 @@
                     </option>
                 @endforeach
             </flux:select>
-            <flux:select name="academic_staff" class="w-44">
+            <flux:select name="academic_staff" class="w-full lg:w-44">
                 <option value="">All Staff Types</option>
                 <option value="1" @selected(request('academic_staff') === '1')>Academic Staff</option>
                 <option value="0" @selected(request('academic_staff') === '0')>Non-academic Staff</option>
             </flux:select>
-            <flux:select name="department_id" class="w-48">
+            <flux:select name="department_id" class="w-full lg:w-48">
                 <option value="">All Departments</option>
                 @foreach ($departments as $department)
                     <option value="{{ $department->id }}" @selected(request('department_id') == $department->id)>
@@ -64,38 +64,40 @@
                     </option>
                 @endforeach
             </flux:select>
-            <flux:button type="submit" variant="filled">Filter</flux:button>
-            @if (request()->hasAny(['search', 'role_id', 'academic_staff', 'department_id']))
-                <flux:button href="{{ route('setup.users.index') }}" wire:navigate>Clear</flux:button>
-            @endif
+            <div class="flex gap-3 sm:col-span-2 lg:col-span-1">
+                <flux:button type="submit" variant="filled" class="flex-1 lg:flex-none">Filter</flux:button>
+                @if (request()->hasAny(['search', 'role_id', 'academic_staff', 'department_id']))
+                    <flux:button href="{{ route('setup.users.index') }}" wire:navigate class="flex-1 lg:flex-none">Clear</flux:button>
+                @endif
+            </div>
         </form>
 
         {{-- Table --}}
-        <div class="overflow-hidden rounded-xl border border-indigo-100 dark:border-indigo-900 shadow-sm">
+        <div class="overflow-x-auto rounded-xl border border-indigo-100 dark:border-indigo-900 shadow-sm">
             <table class="w-full text-sm">
                 <thead class="bg-indigo-50 dark:bg-indigo-900/40 text-left text-xs font-semibold uppercase tracking-wider text-indigo-600 dark:text-indigo-300">
                     <tr>
-                        <th class="px-4 py-3">#</th>
+                        <th class="hidden md:table-cell px-4 py-3">#</th>
                         <th class="px-4 py-3">Name</th>
-                        <th class="px-4 py-3">Email</th>
-                        <th class="px-4 py-3">Title</th>
+                        <th class="hidden sm:table-cell px-4 py-3">Email</th>
+                        <th class="hidden lg:table-cell px-4 py-3">Title</th>
                         <th class="px-4 py-3">Role</th>
-                        <th class="px-4 py-3">Department</th>
+                        <th class="hidden md:table-cell px-4 py-3">Department</th>
                         <th class="px-4 py-3 text-right">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-indigo-50 dark:divide-indigo-900/30 bg-white dark:bg-zinc-900">
                     @forelse ($users as $user)
                         <tr class="hover:bg-indigo-50/60 dark:hover:bg-indigo-900/20 transition-colors">
-                            <td class="px-4 py-3 text-zinc-400 text-xs">{{ $users->firstItem() + $loop->index }}</td>
+                            <td class="hidden md:table-cell px-4 py-3 text-zinc-400 text-xs">{{ $users->firstItem() + $loop->index }}</td>
                             <td class="px-4 py-3">
-                                <div class="flex items-center gap-3">
-                                 
+                                <div class="flex flex-col min-w-0">
                                     <span class="font-semibold text-zinc-800 dark:text-zinc-100">{{ $user->name }}</span>
+                                    <span class="sm:hidden truncate text-xs text-zinc-500 dark:text-zinc-400">{{ $user->email }}</span>
                                 </div>
                             </td>
-                            <td class="px-4 py-3 text-zinc-500 dark:text-zinc-400">{{ $user->email }}</td>
-                            <td class="px-4 py-3 text-zinc-500 dark:text-zinc-400 text-xs">{{ $user->title ?: '—' }}</td>
+                            <td class="hidden sm:table-cell px-4 py-3 text-zinc-500 dark:text-zinc-400 break-all">{{ $user->email }}</td>
+                            <td class="hidden lg:table-cell px-4 py-3 text-zinc-500 dark:text-zinc-400 text-xs">{{ $user->title ?: '—' }}</td>
                             <td class="px-4 py-3">
                                 @php
                                     $roleColors = [
@@ -110,7 +112,7 @@
                                     {{ ucfirst($roleName) }}
                                 </span>
                             </td>
-                            <td class="px-4 py-3 text-zinc-500 dark:text-zinc-400 text-xs">
+                            <td class="hidden md:table-cell px-4 py-3 text-zinc-500 dark:text-zinc-400 text-xs">
                                 @if (($user->role?->academic_staff ?? 0) == 1)
                                     {{ $user->department?->department_name ?? '—' }}
                                 @else
