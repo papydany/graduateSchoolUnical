@@ -112,8 +112,13 @@
 
         {{-- Admissions --}}
         <flux:sidebar.group expandable heading="Admissions" class="space-y-0.5">
-            <flux:sidebar.item icon="document-text" href="#" :current="false">
-                
+            <flux:sidebar.item
+                icon="document-text"
+                :href="route('admission.students.index')"
+                :current="request()->routeIs('admission.students.*')"
+                wire:navigate
+            >
+                Students
             </flux:sidebar.item>
             <flux:sidebar.item icon="check-badge" href="#" :current="false">
                 Offer Letters

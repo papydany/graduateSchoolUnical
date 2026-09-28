@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admission\StudentController;
 use App\Http\Controllers\Course\CourseController;
 use App\Http\Controllers\Course\RegisteredCourseController;
 use App\Http\Controllers\DashboardController;
@@ -47,6 +48,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('department-assigned', [DepartmentAssignedController::class, 'store'])
             ->name('department-assigned.store');
         // });
+    });
+
+    // Admission
+    Route::prefix('admission')->name('admission.')->group(function () {
+        Route::get('students', [StudentController::class, 'index'])
+            ->name('students.index');
+        Route::get('students/import', [StudentController::class, 'importForm'])
+            ->name('students.import.form');
+        Route::post('students/import', [StudentController::class, 'import'])
+            ->name('students.import');
+        Route::get('students/template', [StudentController::class, 'downloadTemplate'])
+            ->name('students.template');
     });
 
     // Courses
