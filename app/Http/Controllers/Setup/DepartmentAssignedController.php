@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Setup;
 
 use App\Http\Controllers\Controller;
+use App\Models\DepartmentAssigned;
 use App\Services\DepartmentAssignedService;
 use Illuminate\Http\Request;
 
@@ -66,5 +67,14 @@ class DepartmentAssignedController extends Controller
         return redirect()
             ->route('setup.department-assigned.index')
             ->with($created > 0 ? 'success' : 'error', $message);
+    }
+
+    public function destroy(DepartmentAssigned $departmentAssigned)
+    {
+        $this->departmentAssignedService->remove($departmentAssigned, auth()->id());
+
+        return redirect()
+            ->back()
+            ->with('success', 'User removed from the department successfully.');
     }
 }

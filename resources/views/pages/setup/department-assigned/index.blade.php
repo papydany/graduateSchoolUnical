@@ -1,5 +1,6 @@
 <x-layouts::app :title="__('Department Assigned Users')">
-    <div class="flex h-full w-full flex-1 flex-col gap-6 p-6">
+    <div class="flex h-full w-full flex-1 flex-col gap-6 p-6"
+         x-data="{ removal: { action: '', user: '', department: '' } }">
 
         {{-- Page Header --}}
         <div class="rounded-xl bg-gradient-to-r from-violet-600 to-purple-500 px-6 py-5 flex items-center justify-between shadow-sm">
@@ -64,8 +65,9 @@
                         <th class="px-4 py-3">User</th>
                         <th class="px-4 py-3">Email</th>
                         <th class="px-4 py-3">Department</th>
-                        <th class="px-4 py-3">Role</th>
-                        <th class="px-4 py-3">Assigned On</th>
+                        
+                     
+                        <th class="px-4 py-3 text-right">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-violet-50 dark:divide-violet-900/30 bg-white dark:bg-zinc-900">
@@ -75,12 +77,27 @@
                             <td class="px-4 py-3 font-semibold text-zinc-800 dark:text-zinc-100">{{ $assigned->user?->name ?? '—' }}</td>
                             <td class="px-4 py-3 text-xs text-zinc-500 dark:text-zinc-400">{{ $assigned->user?->email ?? '—' }}</td>
                             <td class="px-4 py-3 text-xs text-zinc-500 dark:text-zinc-400">{{ $departments[$assigned->department_id] ?? '—' }}</td>
-                            <td class="px-4 py-3 text-xs text-zinc-500 dark:text-zinc-400">{{ $assigned->role?->name ?? '—' }}</td>
-                            <td class="px-4 py-3 text-xs text-zinc-500 dark:text-zinc-400">{{ $assigned->created_at?->format('d M Y') ?? '—' }}</td>
+                           
+                            <td class="px-4 py-3">
+                                <div class="flex items-center justify-end">
+                                    <button type="button"
+                                            x-on:click="removal = @js([
+                                                'action' => route('setup.department-assigned.destroy', $assigned),
+                                                'user' => $assigned->user?->name ?? 'this user',
+                                                'department' => $departments[$assigned->department_id] ?? 'this department',
+                                            ]); $flux.modal('remove-assignment').show()"
+                                            class="inline-flex items-center justify-center rounded-lg p-1.5 text-red-400 hover:bg-red-50 hover:text-red-600 transition-colors dark:hover:bg-red-900/30"
+                                            title="Remove from department">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7a4 4 0 11-8 0 4 4 0 018 0zM9 14a6 6 0 00-6 6v1h12v-1a6 6 0 00-6-6zM21 12h-6" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="px-4 py-16 text-center">
+                            <td colspan="5" class="px-4 py-16 text-center">
                                 <div class="flex flex-col items-center gap-2 text-zinc-400">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="size-10 text-violet-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m6-4.13a4 4 0 10-4-4 4 4 0 004 4zm6 0a4 4 0 10-4-4" />
@@ -102,6 +119,37 @@
         @if ($departmentAssigned->hasPages())
             <div>{{ $departmentAssigned->links() }}</div>
         @endif
+
+        {{-- Remove Confirmation Modal --}}
+        <flux:modal name="remove-assignment" class="md:w-96">
+            <form method="POST" x-bind:action="removal.action" class="space-y-6">
+                @csrf
+                @method('DELETE')
+
+                <div class="flex items-start gap-4">
+                    <div class="flex size-10 shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/40">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="size-5 text-red-600 dark:text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7a4 4 0 11-8 0 4 4 0 018 0zM9 14a6 6 0 00-6 6v1h12v-1a6 6 0 00-6-6zM21 12h-6" />
+                        </svg>
+                    </div>
+                    <div>
+                        <flux:heading size="lg">Remove from department?</flux:heading>
+                        <flux:text class="mt-2">
+                            <span class="font-semibold text-zinc-800 dark:text-zinc-100" x-text="removal.user"></span>
+                            will no longer be assigned to
+                            <span class="font-semibold text-zinc-800 dark:text-zinc-100" x-text="removal.department"></span>.
+                        </flux:text>
+                    </div>
+                </div>
+
+                <div class="flex justify-end gap-2">
+                    <flux:modal.close>
+                        <flux:button variant="ghost">Cancel</flux:button>
+                    </flux:modal.close>
+                    <flux:button type="submit" variant="danger">Remove</flux:button>
+                </div>
+            </form>
+        </flux:modal>
 
     </div>
 </x-layouts::app>

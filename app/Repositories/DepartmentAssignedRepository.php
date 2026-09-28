@@ -91,4 +91,13 @@ class DepartmentAssignedRepository
 
         return $created;
     }
+
+    /**
+     * Soft-delete an assignment, recording who removed it.
+     */
+    public function removeAssignment(DepartmentAssigned $departmentAssigned, int $deletedBy): void
+    {
+        $departmentAssigned->update(['deleted_by' => $deletedBy]);
+        $departmentAssigned->delete();
+    }
 }

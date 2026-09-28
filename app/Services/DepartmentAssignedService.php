@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\DepartmentAssigned;
 use App\Repositories\DepartmentAssignedRepository;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 
@@ -34,5 +35,10 @@ class DepartmentAssignedService
     public function assign(array $departmentIds, array $userIds, int $addedBy): int
     {
         return $this->repository->createAssignments($departmentIds, $userIds, $addedBy);
+    }
+
+    public function remove(DepartmentAssigned $departmentAssigned, int $deletedBy): void
+    {
+        $this->repository->removeAssignment($departmentAssigned, $deletedBy);
     }
 }
