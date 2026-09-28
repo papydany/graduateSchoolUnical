@@ -74,6 +74,14 @@
                 >
                     Department Assigned
                 </flux:sidebar.item>
+                <flux:sidebar.item
+                    icon="academic-cap"
+                    :href="route('setup.faculty-assigned.index')"
+                    :current="request()->routeIs('setup.faculty-assigned.*')"
+                    wire:navigate
+                >
+                    Faculty Assigned
+                </flux:sidebar.item>
 
         </flux:sidebar.group>
        @endif

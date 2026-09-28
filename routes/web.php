@@ -6,6 +6,7 @@ use App\Http\Controllers\Course\RegisteredCourseController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GeneralController;
 use App\Http\Controllers\Setup\DepartmentAssignedController;
+use App\Http\Controllers\Setup\FacultyAssignedController;
 use App\Http\Controllers\Setup\ProgrammeOfStudyController;
 use App\Http\Controllers\Setup\SpecializationController;
 use App\Http\Controllers\Setup\UserController;
@@ -47,6 +48,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->name('department-assigned.coordinators');
         Route::post('department-assigned', [DepartmentAssignedController::class, 'store'])
             ->name('department-assigned.store');
+        Route::get('faculty-assigned', [FacultyAssignedController::class, 'index'])
+            ->name('faculty-assigned.index');
+        Route::get('faculty-assigned/create', [FacultyAssignedController::class, 'create'])
+            ->name('faculty-assigned.create');
+        Route::post('faculty-assigned', [FacultyAssignedController::class, 'store'])
+            ->name('faculty-assigned.store');
+        Route::delete('faculty-assigned/{facultyAssigned}', [FacultyAssignedController::class, 'destroy'])
+            ->name('faculty-assigned.destroy');
         // });
     });
 
