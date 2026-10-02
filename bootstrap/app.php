@@ -19,6 +19,13 @@ return Application::configure(basePath: dirname(__DIR__))
           'xss' => XSS::class,
         'vs' => ValidSession::class,
 ]);
+
+        $middleware->redirectGuestsTo(fn ($request) => $request->is('student/*')
+            ? route('student.login')
+            : route('login'));
+        $middleware->redirectUsersTo(fn ($request) => $request->is('student/*')
+            ? route('student.dashboard')
+            : route('dashboard'));
         //
     })
     ->withExceptions(function (Exceptions $exceptions): void {
