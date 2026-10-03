@@ -29,5 +29,12 @@ return Application::configure(basePath: dirname(__DIR__))
         //
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        // An upload larger than post_max_size arrives with an empty body; send the user back with a message
+        $exceptions->render(function (\Illuminate\Http\Exceptions\PostTooLargeException $e, $request) {
+            if ($request->expectsJson()) {
+                return null;
+            }
+
+            return back()->with('error', 'The uploaded file is too large. The maximum allowed size is '.ini_get('post_max_size').'B.');
+        });
     })->create();

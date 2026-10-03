@@ -12,6 +12,8 @@ use App\Models\Programme;
 use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -69,6 +71,10 @@ class StudentController extends Controller
             'programme_id' => ['required', 'integer', Rule::exists('programmes', 'id')],
             'entry_session' => ['required', 'integer', Rule::in(array_keys($this->sessionOptions()))],
             'file' => ['required', 'file', 'mimes:xlsx,xls'],
+        ], [
+            'file.required' => 'Please choose an Excel file to upload.',
+            'file.uploaded' => 'The file failed to upload. Make sure it is not larger than '.ini_get('upload_max_filesize').'B and try again.',
+            'file.mimes' => 'The file must be an Excel file (.xlsx or .xls).',
         ]);
 
         $facultyId = $request->integer('faculty_id');
@@ -92,17 +98,18 @@ class StudentController extends Controller
         try {
             Excel::import($import, $request->file('file'));
         } catch (\Throwable $e) {
+            Log::error('Student import failed', ['file' => $request->file('file')->getClientOriginalName(), 'exception' => $e]);
+
             return back()->withInput()
-                ->with('error', 'Could not read the uploaded file. Please make sure it is a valid Excel file.');
+                ->with('error', 'Could not read the uploaded file. Please make sure it is a valid Excel file based on the template.')
+                ->with('import_errors', [Str::limit($e->getMessage(), 300)]);
         }
 
         $errors = $import->failures()
             ->map(fn ($failure) => "Row {$failure->row()}: ".implode(' ', $failure->errors()))
             ->all();
 
-        if ($import->errors()->isNotEmpty()) {
-            $errors[] = $import->errors()->count().' row(s) failed to save due to a database error.';
-        }
+        $errors = array_merge($errors, $import->saveErrors);
 
         if ($import->imported === 0 && $import->skipped === 0 && count($errors) > 0) {
             return redirect()

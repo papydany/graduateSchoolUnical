@@ -39,9 +39,19 @@
             {{ session('error') }}
         </div>
     @endif
+    @if ($errors->any())
+        <div class="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-800 dark:bg-red-900/30 dark:text-red-300">
+            <p class="font-semibold mb-1">The file could not be imported:</p>
+            <ul class="list-disc list-inside space-y-0.5">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
     @if (session('import_errors') && count(session('import_errors')) > 0)
         <div class="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700 dark:border-amber-800 dark:bg-amber-900/30 dark:text-amber-300">
-            <p class="font-semibold mb-1">{{ count(session('import_errors')) }} row(s) had issues:</p>
+            <p class="font-semibold mb-1">Details:</p>
             <ul class="list-disc list-inside space-y-0.5 max-h-40 overflow-y-auto">
                 @foreach (session('import_errors') as $importError)
                     <li>{{ $importError }}</li>

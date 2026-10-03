@@ -3,6 +3,7 @@
 namespace App\Imports;
 
 use App\Models\Student;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Concerns\SkipsErrors;
@@ -12,6 +13,7 @@ use Maatwebsite\Excel\Concerns\SkipsOnFailure;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
+use Throwable;
 
 class StudentImport implements SkipsEmptyRows, SkipsOnError, SkipsOnFailure, ToModel, WithHeadingRow, WithValidation
 {
@@ -21,8 +23,13 @@ class StudentImport implements SkipsEmptyRows, SkipsOnError, SkipsOnFailure, ToM
 
     public int $skipped = 0;
 
+    /** @var list<string> */
+    public array $saveErrors = [];
+
     /** @var array<string, bool> */
     private array $seenRegNumbers = [];
+
+    private ?string $currentRegNumber = null;
 
     public function __construct(
         private readonly int $facultyId,
@@ -72,6 +79,7 @@ class StudentImport implements SkipsEmptyRows, SkipsOnError, SkipsOnFailure, ToM
         }
 
         $this->seenRegNumbers[$regNumber] = true;
+        $this->currentRegNumber = $regNumber;
         $this->imported++;
 
         $othername = trim((string) ($row['othername'] ?? ''));
@@ -87,6 +95,20 @@ class StudentImport implements SkipsEmptyRows, SkipsOnError, SkipsOnFailure, ToM
             'othername' => $othername !== '' ? $othername : null,
             'registration_number' => $regNumber,
             'uploaded_by' => $this->uploadedBy,
+            'status' => 23,
         ]);
+    }
+
+    /**
+     * Called when saving a row fails; the row was already counted as imported.
+     */
+    public function onError(Throwable $e)
+    {
+        $this->errors[] = $e;
+        $this->imported--;
+
+        $reason = $e instanceof QueryException ? ($e->errorInfo[2] ?? $e->getMessage()) : $e->getMessage();
+
+        $this->saveErrors[] = "Registration number {$this->currentRegNumber}: could not be saved ({$reason}).";
     }
 }
