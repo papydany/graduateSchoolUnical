@@ -7,6 +7,10 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class Student extends Authenticatable
 {
+    public const STATUS_INCOMPLETE_PROFILE = 23;
+
+    public const STATUS_PROFILE_COMPLETED = 1;
+
     protected $fillable = [
         'uuid',
         'faculty_id',
@@ -29,6 +33,7 @@ class Student extends Authenticatable
         'image_url',
         'matrital_status',
         'password',
+        'status',
         'uploaded_by',
     ];
 
@@ -45,7 +50,13 @@ class Student extends Authenticatable
     {
         return [
             'password' => 'hashed',
+            'status' => 'integer',
         ];
+    }
+
+    public function hasIncompleteProfile(): bool
+    {
+        return $this->status === self::STATUS_INCOMPLETE_PROFILE;
     }
 
     public function uploader(): BelongsTo

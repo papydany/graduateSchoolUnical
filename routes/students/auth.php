@@ -17,6 +17,13 @@ Route::get('student/profile', [StudentProfileController::class, 'index'])
 Route::post('student/profile', [StudentProfileController::class, 'store'])
     ->middleware('throttle:10,1')
     ->name('student.profile.store');
+Route::get('student/profile/complete', [StudentProfileController::class, 'complete'])
+    ->name('student.profile.complete');
+Route::post('student/profile/complete', [StudentProfileController::class, 'update'])
+    ->name('student.profile.update');
+Route::get('student/profile/lgas/{stateId}', [StudentProfileController::class, 'lgas'])
+    ->whereNumber('stateId')
+    ->name('student.profile.lgas');
 
 Route::middleware('auth:student')->group(function () {
     Route::get('student/dashboard', [StudentDashboardController::class, 'index'])

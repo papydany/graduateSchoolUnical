@@ -96,6 +96,10 @@
                     <p class="mt-1 text-sm text-green-700 dark:text-green-500">
                         Matriculation Number: <span class="font-semibold">{{ $found['matriculation_number'] }}</span>
                     </p>
+                    <p class="mt-2 text-sm text-green-700 dark:text-green-500">
+                        Your profile is already complete.
+                        <a href="{{ route('student.login') }}" class="font-semibold underline">Log in here</a>.
+                    </p>
                 </div>
             @endif
 
